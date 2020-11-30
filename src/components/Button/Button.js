@@ -1,7 +1,15 @@
 import React from 'react';
 
-function Button ({handleClick}){}
-window.scrollTo({
-  top: document.documentElement.scrollHeight,
-  behavior: 'smooth',
-});
+export default function Button({ handleClick }) {
+  return (
+    <>
+      <button type="button" onClick={handleClick}>
+        more
+      </button>
+    </>
+  );
+}
+// window.scrollTo({
+//   top: document.documentElement.scrollHeight,
+//   behavior: 'smooth',
+// });

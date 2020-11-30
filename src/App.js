@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './basesStyles.css';
-import axios from 'axios';
+// import axios from 'axios';
 import Searchbar from './components/Searchbar/Searchbar.js';
 import ImageGallery from './components/ImageGallery/ImageGallery.js';
+import AxiosQuery from './Shared/AxiosQuery.js';
+import Button from './components/Button/Button.js';
 
 // import { render } from '@testing-library/react';
 
@@ -24,87 +26,51 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(1);
     const prevQuery = prevState.query;
     const nextQuery = this.state.query;
     if (prevQuery !== nextQuery) {
-      this.fetchArticles();
+      this.fetchData();
     }
   }
   hendleSearch = queryOn => {
     this.setState({
       query: queryOn,
     });
-    console.log(this.state.query);
   };
   // setLargeImageURL = url => {
   //   // this.setState; // метод який передає значення в state.largeImageURL
   // };
-  fetchArticles = () => {
+
+  // fetchArticles = () => {
+  //   const { query, page, APIkey } = this.state;
+  //   console.log(page);
+  // axios
+  //   .get(
+  //     `https://pixabay.com/api/?q=${query}&page=${page}&key=${APIkey}&image_type=photo&orientation=horizontal&per_page=12`,
+  //   )
+  fetchData = () => {
     const { query, page, APIkey } = this.state;
-    console.log(page);
-    axios
-      .get(
-        `https://pixabay.com/api/?q=${query}&page=${page}&key=${APIkey}&image_type=photo&orientation=horizontal&per_page=12`,
+    AxiosQuery.FetchDataWithQuery(query, page, APIkey)
+
+      .then(data =>
+        this.setState(prevState => ({
+          data: [...prevState.data, ...data],
+          page: prevState.page + 1,
+        })),
       )
-      .then(response => {
-        this.setState({
-          data: response.data.hits,
-        });
-        // console.log(this.state.query);
-      })
       .catch(error => this.setState({ error }))
       .finally(() => this.setState({ loading: false }));
   };
-  // onSubmitForm = (querySearch) => {
-  //   this.setState({
-  //     query: querySearch,
-  //   });
-  // };
-  // componentDidMount() {
-  //   this.setState({
-  //     loading: true,
-  //   });
-  //   axios
-  //     .get(
-  //       'https://pixabay.com/api/?q=dogs&page=1&key=18953459-ccf1cbce1be1015139c395560&image_type=photo&orientation=horizontal&per_page=12',
-  //     )
-  //     .then(response => {
-  //       // window.scrollTo({    --- викликати цей метод в зені(спрацьовує плавне прокручування вниз при загрузці додоаткової порції фоток) (це кнопкаlead more)
-  //       //   top: document.documentElement.scrollHeight,    -  це краще зробити в componentDidUbdate по умові при оновлені state виклич цей код
-  //       //   behavior: 'smooth',
-  //       // });
-
-  //       this.setState({
-  //         articles: response.data.hits,
-  //         loading: false,
-  //       });
-  //     });
-  // }
-
-  //
-  // }
-  // fetchArticles = () => {
-  //   const { searchQuery, page } = this.state;
-  //   this.setState({ loading: true });
-  //   articlesApi
-  //     .fetchArticlesWithQuery(searchQuery, page)
-  //     .then(articles =>
-  //       this.setState(prevState => ({
-  //         articles: [...prevState.articles, ...articles],
-  //         page: prevState.page + 1,
-  //       })),
-  //     )
-  //     .catch(error => this.setState({ error }))
-  //     .finally(() => this.setState({ loading: false }));
-  // };
 
   render() {
-    const { data } = this.state;
+    const { data, loading, error } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.hendleSearch} />
-        <ImageGallery data={data} />
+        {error && <p>ERROR</p>}
+        {loading && <p>Loading...</p>}
+        {loading ? <p>Loading...</p> : <ImageGallery data={data} />}
+        {data.length > 0 && <Button handleClick={this.fetchData} />}
       </div>
     );
   }

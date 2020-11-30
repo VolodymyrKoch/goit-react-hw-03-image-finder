@@ -1,5 +1,11 @@
 import React from 'react';
 
+// const Modal = (props) => (
+//   <div className="ModalWrapper">
+//     Test content
+//   </div>
+// );
+
 <div className="Overlay">
   <div className="Modal">
     <img src="" alt="" />

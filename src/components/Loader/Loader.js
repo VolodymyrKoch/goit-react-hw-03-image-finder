@@ -4,7 +4,7 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 // ('Компонент спінера, відображається поки йде завантаження зображень.');
 // Використовуй будь-який готовий компонент, наприклад: https://github.com/mhnpd/react-loader-spinner
 
-export default class App extends React.Component {
+export default class App extends Component {
   //other logic
   render() {
     return (

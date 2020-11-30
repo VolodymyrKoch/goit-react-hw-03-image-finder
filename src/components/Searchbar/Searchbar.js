@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import '../../basesStyles';
 // import PropTypes from 'prop-types';
 
 // import { render } from '@testing-library/react';
@@ -24,7 +25,6 @@ export default class Searchbar extends Component {
   };
   hendeleSubmit = e => {
     e.preventDefault();
-    // this.props.onSubmit(e.target.value);
     this.props.onSubmit(this.state.term);
   };
 
@@ -55,5 +55,3 @@ export default class Searchbar extends Component {
     );
   }
 }
-
-// Searchbar ;
