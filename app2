@@ -1,0 +1,101 @@
+import React, { Component } from 'react';
+import './basesStyles.css';
+import axios from 'axios';
+import { render } from '@testing-library/react';
+
+// https://pixabay.com/api/?q=что_искать&page=номер_страницы&key=твой_ключ&image_type=photo&orientation=horizontal&per_page=12
+// Your API key: 18953459-ccf1cbce1be1015139c395560
+
+// id - унікальний ідентифікатор
+// webformatURL - посилання на маленьке зображення для списку карток
+// largeImageURL - посилання на велике зображення для модального вікна
+class App extends Component {
+  state = {
+    articles: [],
+    loading: false,
+    error: null,
+    serchQuery: '',
+    page: 0,
+    largeImageURL: null,
+  };
+  setLargeImageURL = url =>{
+    this.setState// метод який передає значення в state.largeImageURL
+  }
+  componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+    axios
+      .get(
+        'https://pixabay.com/api/?q=что_искать&page=номер_страницы&key=твой_ключ&image_type=photo&orientation=horizontal&per_page=12',
+      )
+      .then(response => {
+
+        // window.scrollTo({    --- викликати цей метод в зені(спрацьовує плавне прокручування вниз при загрузці додоаткової порції фоток) (це кнопкаlead more)
+        //   top: document.documentElement.scrollHeight,    -  це краще зробити в componentDidUbdate по умові при оновлені state виклич цей код
+        //   behavior: 'smooth',
+        // });
+
+        this.setState({
+          articles: response.data.hits,
+          loading: false,
+        });
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    const prevQuery = prevState.searchQuery;
+    const nextQuery = this.state.searchQuery;
+
+    if (prevQuery !==nextQuery){this.fetchArticles();}
+  }
+  // fetchArticles=()=>{
+  //   const {searchQuery, page} = this.state
+  //   this.setState({loading: true});
+  //   articlesApi
+  //   .fetchArticlesWithQuery(searchQuery, page)
+  //   .then(articles=>
+  //     this.setState(prevState=>({
+  //       articles: [...prevState.articles, ...articles],
+  //       page: prevState.page +1,
+  //     })))
+  //     .catch(error =>this.setState({error}))
+  //     .finally(()=>this.setState({loading: false}))
+  // };
+
+  render() {
+    return(
+
+      <div className="come up with">
+        {this.state.loading ? (<div>Loading...</div>):(
+       <ul>
+          {this.state.articles.map(article => (
+            <li key={article.objectID} className="ImageGalleryItem">
+            <img src="" alt="" className="ImageGalleryItem-image" />
+          </li>
+          ))}
+        </ul> )}
+        <header className="Searchbar">Hello Worlld</header>
+      </div>
+
+      //Modal //
+      // {largeImageURL && <Modal>img<Modal/>}
+      // {/* якщо є URL на велику картинку то рендрим модалку */}
+      //  {/* якщо модалку закриваєм то в state largeImageURL = nul*/}
+      //  //
+    )
+  }
+
+}
+
+
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <header className="App-header">Hello Worlld</header>
+//     </div>
+//   );
+// }
+
+export default App;
