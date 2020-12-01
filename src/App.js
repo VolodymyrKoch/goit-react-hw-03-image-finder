@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
-import './basesStyles.css';
-// import axios from 'axios';
 import Searchbar from './components/Searchbar/Searchbar.js';
 import ImageGallery from './components/ImageGallery/ImageGallery.js';
 import AxiosQuery from './Shared/AxiosQuery.js';
 import Button from './components/Button/Button.js';
+import Loaders from './components/Loader/Loader.js';
+import Modal from './components/Modal/Modal.js';
 
-// import { render } from '@testing-library/react';
-
-// https://pixabay.com/api/?q=что_искать&page=номер_страницы&key=твой_ключ&image_type=photo&orientation=horizontal&per_page=12
-// Your API key: 18953459-ccf1cbce1be1015139c395560
-
-// id - унікальний ідентифікатор
-// webformatURL - посилання на маленьке зображення для списку карток
-// largeImageURL - посилання на велике зображення для модального вікна
 class App extends Component {
   state = {
     data: [],
@@ -32,45 +24,68 @@ class App extends Component {
       this.fetchData();
     }
   }
+
   hendleSearch = queryOn => {
+    this.setState({
+      data: [],
+    });
     this.setState({
       query: queryOn,
     });
   };
-  // setLargeImageURL = url => {
-  //   // this.setState; // метод який передає значення в state.largeImageURL
-  // };
+  openModal = largeImageURL => {
+    this.setState({
+      largeImageURL: largeImageURL,
+    });
+  };
+  modalClose = () => {
+    this.setState(prevState => ({ largeImageURL: !prevState.largeImageURL }));
+  };
 
-  // fetchArticles = () => {
-  //   const { query, page, APIkey } = this.state;
-  //   console.log(page);
-  // axios
-  //   .get(
-  //     `https://pixabay.com/api/?q=${query}&page=${page}&key=${APIkey}&image_type=photo&orientation=horizontal&per_page=12`,
-  //   )
   fetchData = () => {
+    this.setState({ loading: true });
     const { query, page, APIkey } = this.state;
     AxiosQuery.FetchDataWithQuery(query, page, APIkey)
 
-      .then(data =>
-        this.setState(prevState => ({
-          data: [...prevState.data, ...data],
-          page: prevState.page + 1,
-        })),
-      )
+      .then(data => {
+        if (data.length < 1) {
+          this.setState({ error: true });
+        } else {
+          this.setState(prevState => ({
+            data: [...prevState.data, ...data],
+            page: prevState.page + 1,
+            error: false,
+          }));
+          const { scrollTop, clientHeight } = document.documentElement;
+          if (page > 1) {
+            window.scrollTo({
+              top: scrollTop + clientHeight - 160,
+              behavior: 'smooth',
+            });
+          }
+        }
+      })
       .catch(error => this.setState({ error }))
       .finally(() => this.setState({ loading: false }));
   };
 
   render() {
-    const { data, loading, error } = this.state;
+    const { data, loading, error, largeImageURL } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.hendleSearch} />
-        {error && <p>ERROR</p>}
-        {loading && <p>Loading...</p>}
-        {loading ? <p>Loading...</p> : <ImageGallery data={data} />}
+        {error && <p>...The query value failed...</p>}
+
+        {loading && <Loaders />}
+        <ImageGallery data={data} openModal={this.openModal} />
         {data.length > 0 && <Button handleClick={this.fetchData} />}
+        {largeImageURL && (
+          <Modal
+            onSubmit={this.openModal}
+            largeImageURL={largeImageURL}
+            modalClose={this.modalClose}
+          />
+        )}
       </div>
     );
   }

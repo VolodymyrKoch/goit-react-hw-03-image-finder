@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-// ('Компонент спінера, відображається поки йде завантаження зображень.');
-// Використовуй будь-який готовий компонент, наприклад: https://github.com/mhnpd/react-loader-spinner
 
-export default class App extends Component {
-  //other logic
+export default class Loaders extends Component {
   render() {
     return (
       <Loader
@@ -13,7 +10,7 @@ export default class App extends Component {
         color="#00BFFF"
         height={100}
         width={100}
-        timeout={3000} //3 secs
+        timeout={3000}
       />
     );
   }

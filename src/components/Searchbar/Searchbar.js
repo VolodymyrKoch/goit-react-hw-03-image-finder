@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
-// import '../../basesStyles';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
-// import { render } from '@testing-library/react';
-// searchQuery=что_искать
-// page=номер_страницы
-// APIkey =твой_ключ=18953459-ccf1cbce1be1015139c395560
-
-// const APIkey = '18953459-ccf1cbce1be1015139c395560';
-// const fetchArticlesWithQuery = (searchQuery, page = 0) => {
-//   // https://pixabay.com/api/?q=что_искать&page=номер_страницы&key=твой_ключ&image_type=photo&orientation=horizontal&per_page=12
-//   return axios
-//     .get(
-//       `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=${APIkey}&image_type=photo&orientation=horizontal&per_page=12`,
-//     )
-//     .then(response => response.data.hits);
-// };
 export default class Searchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
   state = {
     term: '',
   };
@@ -29,7 +17,6 @@ export default class Searchbar extends Component {
   };
 
   render() {
-    console.log(this.state);
     const { term } = this.state;
     return (
       <div>

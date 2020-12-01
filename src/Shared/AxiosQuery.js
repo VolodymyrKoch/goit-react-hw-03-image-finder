@@ -1,4 +1,5 @@
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const FetchDataWithQuery = (query, page, APIkey) => {
   return axios
@@ -7,4 +8,11 @@ const FetchDataWithQuery = (query, page, APIkey) => {
     )
     .then(response => response.data.hits);
 };
+
+FetchDataWithQuery.propTypes = {
+  query: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+  APIkey: PropTypes.string.isRequired,
+};
+
 export default { FetchDataWithQuery };
