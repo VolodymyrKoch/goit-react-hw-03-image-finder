@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Searchbar from './components/Searchbar/Searchbar.js';
 import ImageGallery from './components/ImageGallery/ImageGallery.js';
-import AxiosQuery from './Shared/AxiosQuery.js';
+// import AxiosQuery from './Shared/AxiosQuery.js';
+import FetchDataWithQuery from './Shared/AxiosQuery.js';
+
 import Button from './components/Button/Button.js';
 import Loaders from './components/Loader/Loader.js';
 import Modal from './components/Modal/Modal.js';
@@ -45,9 +47,9 @@ class App extends Component {
   fetchData = () => {
     this.setState({ loading: true });
     const { query, page, APIkey } = this.state;
-    AxiosQuery.FetchDataWithQuery(query, page, APIkey)
-
+    FetchDataWithQuery(query, page, APIkey)
       .then(data => {
+        // console.log(data);
         if (data.length < 1) {
           this.setState({ error: true });
         } else {
